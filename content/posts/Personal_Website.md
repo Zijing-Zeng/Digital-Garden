@@ -1,15 +1,15 @@
-# 1 Hugo + Hextra 个人网站搭建
+## 1 Hugo + Hextra 个人网站搭建
 
 这份笔记涵盖了从零开始搭建 Hugo + Hextra 个人网站的核心流程。
 
-## 1.1 环境准备
+### 1.1 环境准备
 
 - **Git**: 版本控制。
 - **Go**: 用于管理 Hugo 主题模块。
 - **Hugo (Extended 版本)**: 必须安装 Extended 版以支持高级功能。
 - **Python 3**: 用于运行同步脚本。
 
-## 1.2 初始化项目
+### 1.2 初始化项目
 
 **目标**：在 Git 仓库根目录直接建立 Hugo 站点，避免多层文件夹嵌套。
 
@@ -26,7 +26,7 @@ hugo new site . --force --format yaml
 hugo mod init github.com/yourusername/your-repo
 ```
 
-## 1.3 安装 Hextra 主题
+### 1.3 安装 Hextra 主题
 
 使用 Go Modules 方式安装，便于后续更新和管理。
 
@@ -37,7 +37,7 @@ hugo mod get github.com/imfing/hextra
 hugo mod tidy
 ```
 
-## 1.4 配置文件 (`hugo.yaml`)
+### 1.4 配置文件 (`hugo.yaml`)
 
 新建或覆盖根目录下的 `hugo.yaml`。此配置已包含 **Obsidian 兼容性** 和 **Latex 公式修复**。
 
@@ -96,7 +96,7 @@ menu:
       weight: 1
 ```
 
-## 1.5 自动化同步脚本 (`sync_obsidian.py`)
+### 1.5 自动化同步脚本 (`sync_obsidian.py`)
 
 在根目录创建 `sync_obsidian.py`。
 
@@ -123,7 +123,7 @@ def clean_hugo_dirs():
     os.makedirs(HUGO_STATIC_IMG_PATH, exist_ok=True)
 
 def process_markdown(content, file_path):
-    # 替换 Obsidian 图片语法 ![](/images/xxx.png) 为 Markdown 标准 ![xxx](/images/xxx.png)
+    # 替换 Obsidian 图片语法 ![](/images/Personal_Website/xxx.png) 为 Markdown 标准 ![xxx](/images/Personal_Website/xxx.png)
     def img_replacer(match):
         full_str = match.group(1)
         if '|' in full_str: filename, caption = full_str.split('|', 1)
@@ -141,7 +141,7 @@ def process_markdown(content, file_path):
                 shutil.copy2(src_img, Path(HUGO_STATIC_IMG_PATH) / filename)
                 break
                 
-        return f"![{caption}](/images/{filename})"
+        return f"![{caption}](/images/Personal_Website/{filename})"
 
     return re.sub(r'!\[\[(.*?)\]\]', img_replacer, content)
 
@@ -168,7 +168,7 @@ if __name__ == "__main__":
     main()
 ```
 
-## 1.6 运行与预览
+### 1.6 运行与预览
 
 1. **准备目录**：确保存在 `content/posts` 目录。
 
@@ -192,7 +192,7 @@ hugo server
 
 ---
 
-## 1.7 常用命令速查
+### 1.7 常用命令速查
 
 - **本地预览**：`hugo server`
 - **构建静态文件**：`hugo --minify` (生成到 `public/` 目录)

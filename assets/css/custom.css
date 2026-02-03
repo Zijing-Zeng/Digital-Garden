@@ -1,0 +1,222 @@
+/* static/css/custom.css - v8.0 丝滑悬浮版 */
+
+/* ==========================================================================
+   1. 基础配置
+   ========================================================================== */
+:root {
+    --bg-color: #f3f4f6;
+    --card-bg: #ffffff;
+    --card-radius: 16px;
+    --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 10px 15px -3px rgba(0, 0, 0, 0.03);
+    /* 默认页面宽度 (对应 JS 里的默认值) */
+    --page-max-width: 1280px;
+}
+
+.dark {
+    --bg-color: #0d1117;
+    --card-bg: #161b22;
+    --card-shadow: 0 10px 30px rgba(0,0,0,0.6);
+}
+
+html, body, main {
+    background-color: var(--bg-color) !important;
+}
+
+/* ==========================================================================
+   2. 丝滑缩放 (去除阶梯感)
+   ========================================================================== */
+/* Hextra 默认使用 max-w-screen-xl 等阶梯式宽度。
+   我们强制它变为流式布局 (Fluid)，宽度 100%，
+   但最大宽度由我们的滑动条变量控制。
+*/
+.hextra-max-page-width,
+.container {
+    width: 100% !important;
+    max-width: var(--page-max-width) !important;
+
+    /* 关掉 Tailwind 的固定断点 */
+    min-width: 0 !important;
+
+    /* 确保居中 */
+    margin-left: auto !important;
+    margin-right: auto !important;
+
+    /* 添加过渡，让拖动滑块时更顺滑 */
+    transition: max-width 0.1s linear;
+}
+
+/* ==========================================================================
+   3. 正文卡片 (Article Card)
+   ========================================================================== */
+main article,
+main .content,
+div.prose {
+    background-color: var(--card-bg) !important;
+    box-shadow: var(--card-shadow) !important;
+    border-radius: var(--card-radius) !important;
+
+    /* 内边距 */
+    padding: 1rem 2rem !important;
+
+    /* 垂直间距 */
+    margin-top: 2rem !important;
+    margin-bottom: 1rem !important;
+}
+
+/* 清除套娃背景 */
+main article > *, main .content > *, div.prose > * {
+    background-color: transparent !important;
+    box-shadow: none !important;
+    border: none !important;
+}
+.hx-border-t { border-top: none !important; }
+
+
+/* ==========================================================================
+   4. 目录卡片 (TOC) - 悬浮固定 (Sticky)
+   ========================================================================== */
+.hextra-toc {
+    background-color: var(--card-bg) !important;
+    box-shadow: var(--card-shadow) !important;
+    border-radius: var(--card-radius) !important;
+
+    padding: 1rem !important;
+    margin-left: 1rem !important;
+
+    /* === 核心：悬浮固定的魔法 === */
+    position: sticky !important;
+    top: 10vh !important; /* 距离浏览器顶部 11rem (避开顶部导航栏) */
+
+    /* 确保自身高度适应内容，但不要超过屏幕 */
+    height: fit-content !important;
+    max-height: calc(100vh - 20vh) !important;
+
+    /* 内部允许滚动 */
+    overflow-y: hidden !important;
+
+    z-index: 10 !important;
+}
+
+/* 左侧侧边栏 (桌面端透明，移动端在后面单独处理) */
+@media (min-width: 1025px) {
+    aside, .hextra-sidebar-container {
+        background-color: transparent !important;
+        border: none !important;
+
+        /* 侧边栏也可以 sticky */
+        position: sticky !important;
+        top: 5.5rem !important;
+        height: calc(100vh - 7rem) !important;
+    }
+}
+
+/* ==========================================================================
+   5. 悬浮胶囊控制坞
+   ========================================================================== */
+#control-dock {
+    position: fixed !important;
+    bottom: 2rem !important;
+    right: 2rem !important;
+    z-index: 9999 !important;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: rgba(255, 255, 255, 0.75);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    padding: 6px 6px 6px 16px;
+    border-radius: 99px;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+}
+
+.dark #control-dock {
+    background: rgba(30, 30, 30, 0.8);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+/* 隐藏输入框的默认样式 */
+.slider-wrapper { display: flex; align-items: center; }
+input[type=range] { -webkit-appearance: none; width: 100px; background: transparent; }
+input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 4px; background: rgba(0, 0, 0, 0.15); border-radius: 2px; }
+input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; height: 16px; width: 16px; border-radius: 50%; background: #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.2); margin-top: -6px; cursor: grab; }
+
+/* 按钮样式 */
+#backToTop {
+    position: static !important;
+    margin: 0 !important;
+    width: 34px !important;
+    height: 34px !important;
+    border-radius: 50% !important;
+    background: #fff !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    color: #333 !important;
+}
+#backToTop span { display: none !important; }
+#backToTop svg { width: 18px !important; height: 18px !important; }
+
+
+/* ==========================================================================
+   6. 屏幕适配与断点优化 (Responsive)
+   ========================================================================== */
+/* 当屏幕宽度小于 1280px 时 (笔记本) */
+@media (max-width: 1280px) {
+    /* 稍微减小正文内边距 */
+    main article, main .content {
+        padding: 2rem !important;
+    }
+}
+
+/* ==========================================================================
+   7. 移动端紧急修复 (Mobile Fixes)
+   ========================================================================== */
+/* 针对平板和手机 (1024px 以下) */
+@media (max-width: 1024px) {
+
+    /* A. 正文卡片还原为全宽 */
+    main article, main .content, div.prose {
+        background: transparent !important;
+        box-shadow: none !important;
+        margin: 0 !important;
+        padding: 1rem !important;
+        width: 100% !important;
+        border-radius: 0 !important;
+    }
+
+    /* B. 隐藏右侧目录卡片 (移动端不需要侧边悬浮) */
+    .hextra-toc { display: none !important; }
+
+    /* C. 隐藏滑块控件，只保留 BackToTop 按钮 */
+    /* 我们不隐藏 #control-dock，而是把背景去掉，只留按钮 */
+    #control-dock {
+        background: transparent !important;
+        box-shadow: none !important;
+        border: none !important;
+        backdrop-filter: none !important;
+        padding: 0 !important;
+        right: 1.5rem !important;
+        bottom: 1.5rem !important;
+    }
+    .slider-wrapper { display: none !important; }
+
+    #backToTop {
+        width: 44px !important;
+        height: 44px !important;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2) !important;
+    }
+
+    /* D. === 移动端侧边栏菜单 === */
+    /* 解决“杂糅”问题：给移动端弹出的 aside 菜单加回不透明背景 */
+    aside, .hextra-sidebar-container {
+        background-color: var(--card-bg) !important; /* 恢复白色背景 */
+        z-index: 50 !important; /* 提高层级，盖住正文 */
+    }
+
+    /* 确保菜单里面的文字清晰 */
+    aside * {
+        opacity: 1 !important;
+    }
+}

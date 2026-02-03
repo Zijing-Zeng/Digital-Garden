@@ -30,7 +30,30 @@ module:
 
 # 开启 Hextra 的一些特性
 params:
+  author:
+    name: "Zijing Zeng"
+
   description: "我的个人数字花园"
+
+  page:
+    toc: true            # 开启目录
+    displayTags: true    # 显示标签
+    displayAuthor: true  # 显示作者
+    displayDate: true    # 显示日期
+    displayLastmod: true # 显示最后修改时间
+    displayWordCount: true # 显示字数
+    displayReadingTime: true # 显示阅读时间
+    displayTaxonomies: true # 显示分类
+
+  # === 关键：侧边栏配置 ===
+  sidebar:
+    enable: true          # 全局开启侧边栏
+    width: "18rem"        # 设置宽度，防止太窄
+    collapsible: true     # 允许折叠
+
+  toc:
+    enable: true
+    heading: "目录"
 
   # 导航栏配置
   navbar:
@@ -46,6 +69,7 @@ params:
   footer:
     enable: true
     displayCopyright: true
+    copyright: "© 2026 Zijing. Powered by Hugo & Hextra."
 
   # 开启数学公式支持 (Latex)
   math:

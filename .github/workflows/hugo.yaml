@@ -1,34 +1,50 @@
-name: Deploy to GitHub Pages
+name: Deploy Hugo Site to Pages
 
 on:
+  # 监听 push 事件
   push:
     branches:
-      - main  # 确保你的主分支叫 main，如果是 master 请修改这里
+      - main  # ⚠️ 请确认你本地分支叫 main 还是 master，这里要一致！
 
+  # 允许你在 Actions 页面手动点击 "Run workflow" 按钮 (非常实用的调试功能)
+  workflow_dispatch:
+
+# 设置权限，允许 Action 修改 GitHub Pages
 permissions:
   contents: read
   pages: write
   id-token: write
 
+# 并发处理：如果有新的 push 来了，立刻取消正在跑的旧 push，省时间
 concurrency:
   group: "pages"
-  cancel-in-progress: false
+  cancel-in-progress: true
+
+# 默认使用 bash
+defaults:
+  run:
+    shell: bash
 
 jobs:
+  # 构建任务
   build:
     runs-on: ubuntu-latest
+    env:
+      HUGO_VERSION: 0.128.0 # 建议指定一个版本，或者用 latest
+      HUGO_ENV: production
+
     steps:
-      - name: Checkout
+      - name: Checkout code
         uses: actions/checkout@v4
         with:
-          submodules: true  # 必须开启，为了下载 Hextra 主题
-          fetch-depth: 0
+          submodules: true  # 如果你的主题是作为 submodule 安装的，必须设为 true
+          fetch-depth: 0    #以此获取完整的 git 历史 (这对某些 Hugo 功能很重要)
 
       - name: Setup Hugo
-        uses: peaceiris/actions-hugo@v2
+        uses: peaceiris/actions-hugo@v3
         with:
           hugo-version: 'latest'
-          extended: true
+          extended: true  # ✅ 重要！因为你用了 SCSS (assets文件夹)，必须开启扩展版
 
       - name: Build
         run: hugo --minify
@@ -38,6 +54,7 @@ jobs:
         with:
           path: ./public
 
+  # 部署任务
   deploy:
     environment:
       name: github-pages
